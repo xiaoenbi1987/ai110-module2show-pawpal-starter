@@ -56,19 +56,25 @@ Paste a sample of your app's CLI or Streamlit output here so a reader can see wh
 
 ## 🧪 Testing PawPal+
 
-```bash
-# Run the full test suite:
-pytest
+Run the full test suite from the project root:
 
-# Run with coverage:
-pytest --cov
+```bash
+python -m pytest
 ```
+
+The tests cover five core behaviors: marking a task complete, adding a task to a pet, sorting tasks by time, daily-task recurrence (auto-creating the next day's task), and conflict detection for tasks at the same time.
 
 Sample test output:
 
 ```
-# Paste your pytest output here
+collected 5 items
+
+tests/test_pawpal.py .....                                  [100%]
+
+===== 5 passed in 0.04s =====
 ```
+
+**Confidence Level:** ⭐⭐⭐⭐ (4/5) — the core scheduling behaviors are verified by automated tests. With more time I would add edge cases: a pet with no tasks, weekly recurrence, and overlapping durations instead of only exact-time conflicts.
 
 ## 📐 Smarter Scheduling
 
