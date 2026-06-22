@@ -21,13 +21,11 @@ Based on AI feedback, I kept the class structure the same but recorded one desig
 
 **a. Constraints and priorities**
 
-- What constraints does your scheduler consider (for example: time, priority, preferences)?
-- How did you decide which constraints mattered most?
+My scheduler considers three things: priority (high/medium/low), start time (HH:MM), and completion status. Priority decides how important a task is, start time gives the daily order, and completion status lets the owner filter finished vs. unfinished tasks. I treated priority and time as the most important because a busy owner mainly cares about getting urgent tasks done and knowing when each one happens.
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+One tradeoff: my conflict detection only flags tasks that share the exact same start time, not tasks whose durations overlap. For example, a 30-minute task at 08:00 and a task at 08:15 would not be flagged even though they overlap. This is reasonable for this scenario because it keeps the logic simple and fast, and exact-time clashes are the clearest, most common conflicts for a pet owner. Overlap-by-duration detection could be added later as an improvement.
 
 ---
 

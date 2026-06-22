@@ -76,10 +76,10 @@ Sample test output:
 
 | Feature | Method(s) | Notes |
 |---------|-----------|-------|
-| Task sorting | | e.g., by priority, duration |
-| Filtering | | e.g., skip tasks if time runs out |
-| Conflict handling | | e.g., overlapping time slots |
-| Recurring tasks | | e.g., daily vs. weekly |
+| Task sorting | Scheduler.sort_by_time(), Scheduler.sort_tasks() | Sort by start time (HH:MM) or by priority |
+| Filtering | Scheduler.filter_tasks() | Filter by completion status |
+| Conflict handling | Scheduler.detect_conflicts() | Flags tasks with the same start time; returns warnings without crashing |
+| Recurring tasks | Task.mark_complete(), Task.next_occurrence() | Daily/weekly tasks auto-create the next occurrence using timedelta |
 
 ## 📸 Demo Walkthrough
 
