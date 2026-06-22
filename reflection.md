@@ -2,15 +2,18 @@
 
 ## 1. System Design
 
-**a. Initial design**
+My initial design has four classes that mirror the real parts of pet care:
 
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+- Task: a single care activity. Stores name, duration (minutes), priority, and a completed flag; has mark_complete().
+- Pet: one animal. Stores name and species, and holds a list of its Tasks; can add_task() and list_tasks().
+- Owner: the user. Stores name and a list of Pets; can add_pet() and get_all_tasks() across all pets.
+- Scheduler: the "brain." It does not store data itself; it reads from an Owner and organizes tasks into a daily plan via sort_tasks() and generate_plan().
+
+Relationships: an Owner has many Pets, each Pet has many Tasks, and the Scheduler reads from the Owner to build the plan. I kept the Scheduler separate from the data classes so the scheduling logic stays in one place and is easy to change later.
 
 **b. Design changes**
 
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+Based on AI feedback, I kept the class structure the same but recorded one design decision. The AI pointed out that storing priority as a string ("high"/"medium"/"low") would not sort correctly if compared as plain text (alphabetical order gives the wrong result). I decided to keep priority as a readable string for the user, but have the Scheduler map those strings to numeric weights (high=3, medium=2, low=1) when sorting. I will implement this mapping in the scheduling logic in Phase 4 rather than changing the data class now, to keep the skeleton simple.
 
 ---
 
