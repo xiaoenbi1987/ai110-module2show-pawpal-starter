@@ -42,6 +42,15 @@ pip install -r requirements.txt
 6. Connect your logic to the Streamlit UI in `app.py`.
 7. Refine UML so it matches what you actually built.
 
+## ✨ Features
+
+- **Task management** — add pets and care tasks with a name, duration, priority, start time, and frequency.
+- **Priority & time sorting** — order tasks by priority (`Scheduler.sort_tasks()`) or chronologically by start time (`Scheduler.sort_by_time()`).
+- **Filtering** — filter tasks by completion status (`Scheduler.filter_tasks()`).
+- **Conflict warnings** — automatically flags tasks at the same time (`Scheduler.detect_conflicts()`) without crashing.
+- **Recurring tasks** — daily/weekly tasks auto-create their next occurrence when completed (`Task.next_occurrence()`, using `timedelta`).
+- **Streamlit UI** — an interactive web app to add tasks and generate a conflict-checked daily schedule.
+
 ## 🖥️ Sample Output
 
 Paste a sample of your app's CLI or Streamlit output here so a reader can see what a generated plan looks like:
@@ -89,12 +98,34 @@ tests/test_pawpal.py .....                                  [100%]
 
 ## 📸 Demo Walkthrough
 
-Describe your app in numbered steps so a reader can follow along without watching a video:
+PawPal+ runs as a Streamlit web app (`streamlit run app.py`). The main screen lets a user:
 
-1. <!-- Describe this step -->
-2. <!-- Describe this step -->
-3. <!-- Describe this step -->
-4. <!-- Describe this step -->
-5. <!-- Add more steps as needed -->
+1. Enter the owner and pet details (name, species).
+2. Add care tasks with a title, duration, start time, priority, and frequency, then click **Add task**.
+3. Click **Generate schedule** to see today's plan.
+
+When the schedule is generated, the app:
+- Sorts all tasks chronologically by start time.
+- Shows a yellow **conflict warning** for any two tasks set at the same time.
+- Displays the final plan in a clean table.
+
+Example workflow: add the pet "Mochi" → add a "Morning walk" at 08:00 and a "Feeding" at 08:00 → click Generate schedule → the app warns that the two tasks conflict and shows the sorted plan.
+
+Sample CLI output from running `python main.py`:
+
+```
+===== Schedule sorted by time =====
+08:00  Morning walk  (30 min)  priority: high
+12:00  Feeding  (10 min)  priority: medium
+12:00  Medication  (5 min)  priority: high
+18:00  Evening walk  (30 min)  priority: high
+
+===== Conflict check =====
+Conflict: 'Medication' and 'Feeding' are both at 12:00
+
+===== Recurring task =====
+Completed: Morning walk on 2026-06-22
+Auto-created next: Morning walk on 2026-06-23
+```
 
 **Screenshot or video** *(optional)*: <!-- Insert a screenshot or link to a demo video here -->

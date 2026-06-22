@@ -1,16 +1,15 @@
 import streamlit as st
+from datetime import time
 from pawpal_system import Owner, Pet, Task, Scheduler
 
 st.set_page_config(page_title="PawPal+", page_icon="🐾", layout="centered")
 
 st.title("🐾 PawPal+")
-st.markdown("Plan your pet's daily care tasks, sorted by priority.")
+st.markdown("Plan your pet's daily care tasks — sorted, filtered, and conflict-checked.")
 
 # ---- 应用"记忆"：用 session_state 存住任务列表 ----
-# Streamlit 每次点按钮都会重跑整个脚本，
-# 把数据存进 session_state 才不会在刷新时丢失。
 if "tasks" not in st.session_state:
-    st.session_state.tasks = []   # 存的是真正的 Task 对象
+    st.session_state.tasks = []
 
 st.divider()
 
@@ -24,25 +23,32 @@ st.divider()
 
 # ---- 添加任务 ----
 st.subheader("Add a Task")
-col1, col2, col3 = st.columns(3)
+col1, col2 = st.columns(2)
 with col1:
     task_title = st.text_input("Task title", value="Morning walk")
-with col2:
     duration = st.number_input("Duration (minutes)", min_value=1, max_value=240, value=20)
-with col3:
+with col2:
+    start_time = st.time_input("Start time", value=time(8, 0))
     priority = st.selectbox("Priority", ["low", "medium", "high"], index=2)
+frequency = st.selectbox("Frequency", ["once", "daily", "weekly"])
 
 if st.button("Add task"):
-    # 创建一个真正的 Task 对象，存进 session_state
-    new_task = Task(name=task_title, duration=int(duration), priority=priority)
+    new_task = Task(
+        name=task_title,
+        duration=int(duration),
+        priority=priority,
+        start_time=start_time.strftime("%H:%M"),
+        frequency=frequency,
+    )
     st.session_state.tasks.append(new_task)
-    st.success(f"Added task: {task_title}")
+    st.success(f"Added task: {task_title} at {new_task.start_time}")
 
 # 显示当前任务
 if st.session_state.tasks:
     st.write("Current tasks:")
     st.table([
-        {"Task": t.name, "Duration (min)": t.duration, "Priority": t.priority}
+        {"Task": t.name, "Time": t.start_time, "Duration (min)": t.duration,
+         "Priority": t.priority, "Frequency": t.frequency}
         for t in st.session_state.tasks
     ])
 else:
@@ -57,20 +63,25 @@ if st.button("Generate schedule"):
     if not st.session_state.tasks:
         st.warning("Add at least one task first.")
     else:
-        # 1. 用当前输入重新搭建 Owner 和 Pet
         owner = Owner(owner_name)
         pet = Pet(pet_name, species)
         for task in st.session_state.tasks:
             pet.add_task(task)
         owner.add_pet(pet)
 
-        # 2. 让调度器生成排好序的计划
         scheduler = Scheduler()
-        plan = scheduler.generate_plan(owner)
+        all_tasks = owner.get_all_tasks()
 
-        # 3. 显示结果
-        st.success(f"Today's plan for {owner.name} (pet: {pet.name})")
+        # 冲突检测 → 用 st.warning 显示警告
+        conflicts = scheduler.detect_conflicts(all_tasks)
+        for w in conflicts:
+            st.warning(w)
+
+        # 按时间排序 → 用 st.table 显示日程
+        plan = scheduler.sort_by_time(all_tasks)
+        st.success(f"Today's plan for {owner.name} (pet: {pet.name}), sorted by time")
         st.table([
-            {"Task": t.name, "Duration (min)": t.duration, "Priority": t.priority}
+            {"Time": t.start_time, "Task": t.name, "Duration (min)": t.duration,
+             "Priority": t.priority}
             for t in plan
         ])

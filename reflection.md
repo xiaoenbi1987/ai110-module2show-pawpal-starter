@@ -33,13 +33,11 @@ One tradeoff: my conflict detection only flags tasks that share the exact same s
 
 **a. How you used AI**
 
-- How did you use AI tools during this project (for example: design brainstorming, debugging, refactoring)?
-- What kinds of prompts or questions were most helpful?
+I used AI throughout the project: to brainstorm the initial class design and generate the Mermaid UML diagram, to scaffold class skeletons, to flesh out method logic, and to debug. The most helpful prompts were specific ones that included my actual code and a clear question, like "here is my Task class skeleton, what relationships or logic bottlenecks am I missing?" Asking for one focused thing at a time worked better than vague open-ended requests.
 
 **b. Judgment and verification**
 
-- Describe one moment where you did not accept an AI suggestion as-is.
-- How did you evaluate or verify what the AI suggested?
+One moment I did not accept an AI suggestion as-is: the AI flagged that storing priority as a string ("high"/"medium"/"low") would sort incorrectly in alphabetical order. I agreed with the problem but chose my own solution — keeping priority as a readable string and mapping it to numeric weights inside the Scheduler — instead of redesigning the whole field. I verified AI suggestions by running main.py and the pytest suite to confirm the behavior was actually correct, not just plausible-looking.
 
 ---
 
@@ -47,13 +45,11 @@ One tradeoff: my conflict detection only flags tasks that share the exact same s
 
 **a. What you tested**
 
-- What behaviors did you test?
-- Why were these tests important?
+I tested five behaviors: marking a task complete, adding a task to a pet, sorting tasks chronologically by time, daily-task recurrence (a completed daily task creates the next day's task), and conflict detection for two tasks at the same time. These mattered because they are the core promises of the app — if sorting, recurrence, or conflict detection broke, the schedule would be wrong or misleading.
 
 **b. Confidence**
 
-- How confident are you that your scheduler works correctly?
-- What edge cases would you test next if you had more time?
+I am fairly confident (4/5) that the scheduler works correctly, because all five automated tests pass and the CLI demo behaves as expected. With more time I would test edge cases: a pet with no tasks, weekly recurrence, and overlapping durations rather than only exact-time conflicts.
 
 ---
 
@@ -61,12 +57,12 @@ One tradeoff: my conflict detection only flags tasks that share the exact same s
 
 **a. What went well**
 
-- What part of this project are you most satisfied with?
+I am most satisfied with the CLI-first workflow: building and verifying the logic in main.py and the test suite before touching the UI made the Streamlit integration smooth, because the "brain" was already proven to work.
 
 **b. What you would improve**
 
-- If you had another iteration, what would you improve or redesign?
+If I had another iteration, I would improve conflict detection to handle overlapping durations (not just identical start times), and let the scheduler balance priority and time together instead of offering them as two separate sorts.
 
 **c. Key takeaway**
 
-- What is one important thing you learned about designing systems or working with AI on this project?
+The biggest thing I learned is that being the "lead architect" means using AI to move fast while still owning the design decisions and verifying every suggestion. AI is great at generating options and boilerplate, but I had to decide what fit the system and confirm it with tests. Using separate chat sessions for design, implementation, algorithms, and testing also kept each conversation focused and easier to follow.
